@@ -10,7 +10,7 @@
         public string Description { get; set; }
 
         // Navigational properties
-        public ICollection<ApplicationUserGymClass> GymClassMembers { get; set; }
+        public ICollection<ApplicationUserGymClass> GymClassMembers { get; set; } = new List<ApplicationUserGymClass>();
 
     }
 }
