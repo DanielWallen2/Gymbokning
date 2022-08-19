@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Gymbokning.Data;
 using Gymbokning.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Gymbokning.Controllers
 {
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GymClassesController(ApplicationDbContext context)
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: GymClasses
@@ -159,5 +162,17 @@ namespace Gymbokning.Controllers
         {
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        //public async Task<IActionResult> BookingToggle(int? id)
+        //{
+        //    if (id == null) return NotFound();
+
+        //    var gymClass = await _context.GymClasses.FindAsync(id);
+
+        //    bool isBooked = gymClass.GymClassMembers.Where(m => m.ApplicationUserId == _userManager.GetUserIdAsync());
+
+        //    return 
+        //}
+
     }
 }
