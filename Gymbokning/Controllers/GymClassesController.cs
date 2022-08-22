@@ -33,17 +33,11 @@ namespace Gymbokning.Controllers
         // GET: GymClasses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.GymClasses == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.GymClasses == null) return NotFound();
 
             var gymClass = await _context.GymClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (gymClass == null)
-            {
-                return NotFound();
-            }
+            if (gymClass == null) return NotFound();
 
             return View(gymClass);
         }
