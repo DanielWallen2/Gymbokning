@@ -163,16 +163,29 @@ namespace Gymbokning.Controllers
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        //public async Task<IActionResult> BookingToggle(int? id)
-        //{
-        //    if (id == null) return NotFound();
+        public async Task<IActionResult> BookingToggle(int? id)
+        {
+            if (id == null) return NotFound();
 
-        //    var gymClass = await _context.GymClasses.FindAsync(id);
+            var userId = _userManager.GetUserId(User);      // User = inloggad user!
+            var booking = _context.ApplicationUserGymClasses.Find(userId, id);
 
-        //    bool isBooked = gymClass.GymClassMembers.Where(m => m.ApplicationUserId == _userManager.GetUserIdAsync());
+            if (booking == null)
+            {
+                booking = new ApplicationUserGymClass       // Skapa bookning om den inte finns
+                {
+                    GymClassId = (int)id,
+                    ApplicationUserId = userId
+                };
+            }
+            else
+            {
+                _context.Remove(booking);                   // Ta bort bookningen om den finns
+            }
 
-        //    return 
-        //}
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
     }
 }
