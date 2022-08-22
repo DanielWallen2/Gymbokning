@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Gymbokning.Data;
 using Gymbokning.Models;
 using Microsoft.AspNetCore.Identity;
+using Gymbokning.ViewModels;
 
 namespace Gymbokning.Controllers
 {
@@ -25,9 +26,26 @@ namespace Gymbokning.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-              return _context.GymClasses != null ? 
-                          View(await _context.GymClasses.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
+
+            var gymClasses = await _context.GymClasses.ToListAsync();
+            var gymClassesList = new List<GymClassIndexViewModel>();
+
+            foreach (var gymClass in gymClasses)
+            {
+                var gymPassesViewModel = new GymClassIndexViewModel
+                {
+                    Id = gymClass.Id,
+                    Name = gymClass.Name,
+                    StartTime = gymClass.StartTime,
+                    Duration = gymClass.Duration,
+                    Description = gymClass.Description,
+                    IsBooked = await IsBooked(gymClass.Id)
+                };
+                gymClassesList.Add(gymPassesViewModel);
+            }
+
+            return View(gymClassesList);
+
         }
 
         // GET: GymClasses/Details/5
@@ -171,7 +189,7 @@ namespace Gymbokning.Controllers
                     GymClassId = (int)id,
                     ApplicationUserId = userId
                 };
-                _context.ApplicationUserGymClasses.Add(booking);    // Kom ihåg ...
+                _context.ApplicationUserGymClasses.Add(booking);    // Kom ihåg Add ...
             }
             else
             {
@@ -180,6 +198,14 @@ namespace Gymbokning.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<bool> IsBooked(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var booking = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
+
+            return (booking != null);
         }
 
     }

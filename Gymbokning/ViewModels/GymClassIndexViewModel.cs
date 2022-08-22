@@ -11,7 +11,7 @@ namespace Gymbokning.ViewModels
         public DateTime EndTime { get { return (StartTime + Duration); } }
         public string Description { get; set; }
 
-        public bool isbooked { get; set; }
+        public bool IsBooked { get; set; }
 
         // Navigational properties
         public ICollection<ApplicationUserGymClass> GymClassMembers { get; set; } = new List<ApplicationUserGymClass>();
