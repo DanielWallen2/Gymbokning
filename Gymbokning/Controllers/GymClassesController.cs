@@ -171,7 +171,7 @@ namespace Gymbokning.Controllers
                     GymClassId = (int)id,
                     ApplicationUserId = userId
                 };
-                _context.ApplicationUserGymClasses.Add(booking);
+                _context.ApplicationUserGymClasses.Add(booking);    // Kom ihåg ...
             }
             else
             {
