@@ -162,7 +162,7 @@ namespace Gymbokning.Controllers
             if (id == null) return NotFound();
 
             var userId = _userManager.GetUserId(User);      // User = inloggad user!
-            var booking = _context.ApplicationUserGymClasses.Find(userId, id);
+            var booking = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
 
             if (booking == null)
             {
@@ -171,6 +171,7 @@ namespace Gymbokning.Controllers
                     GymClassId = (int)id,
                     ApplicationUserId = userId
                 };
+                _context.ApplicationUserGymClasses.Add(booking);
             }
             else
             {
