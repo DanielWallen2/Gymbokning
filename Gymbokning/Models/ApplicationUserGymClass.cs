@@ -6,6 +6,8 @@
         public int GymClassId { get; set; }
         public string ApplicationUserId { get; set; }
 
+        // Navigation property
+
     }
 
 }

@@ -53,11 +53,38 @@ namespace Gymbokning.Controllers
         {
             if (id == null || _context.GymClasses == null) return NotFound();
 
-            var gymClass = await _context.GymClasses
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var gymClass = await _context.GymClasses.FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null) return NotFound();
 
-            return View(gymClass);
+            var classMembersList = new List<ApplicationUser>();
+            var classMembers = _context.ApplicationUserGymClasses.Where(c => c.GymClassId == id).ToList();
+            foreach (var classMember in classMembers)
+            {
+                var user = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == classMember.ApplicationUserId);
+                classMembersList.Add(user);
+            }
+
+            var gymPassDetailViewModel = new GymClassDetailViewModel
+            {
+                Id = gymClass.Id,
+                Name = gymClass.Name,
+                StartTime = gymClass.StartTime,
+                Duration = gymClass.Duration,
+                Description = gymClass.Description,
+                GymClassMembers = classMembersList
+            };
+
+
+            //var gymClass2 = await _context.GymClasses
+            //    .Include(g => g.GymClassMembers)
+            //    .ThenInclude(g => g.ApplicationUserId)
+            //    .FirstOrDefaultAsync(g => g.Id == id)
+            //    .Select(g => new GymClassDetailViewModel
+            //    {
+            //        Id
+            //    })
+
+            return View(gymPassDetailViewModel);
         }
 
         // GET: GymClasses/Create
