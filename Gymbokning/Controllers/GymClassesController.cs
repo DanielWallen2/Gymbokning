@@ -9,6 +9,7 @@ using Gymbokning.Data;
 using Gymbokning.Models;
 using Microsoft.AspNetCore.Identity;
 using Gymbokning.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Gymbokning.Controllers
 {
@@ -202,16 +203,17 @@ namespace Gymbokning.Controllers
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [Authorize]
         public async Task<IActionResult> BookingToggle(int? id)
         {
             if (id == null) return NotFound();
 
-            var userId = _userManager.GetUserId(User);      // User = inloggad user!
+            var userId = _userManager.GetUserId(User);              // User = inloggad user (från cookie)!
             var booking = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
 
             if (booking == null)
             {
-                booking = new ApplicationUserGymClass       // Skapa bookning om den inte finns
+                booking = new ApplicationUserGymClass               // Skapa bookning om den inte finns
                 {
                     GymClassId = (int)id,
                     ApplicationUserId = userId
@@ -220,7 +222,7 @@ namespace Gymbokning.Controllers
             }
             else
             {
-                _context.Remove(booking);                   // Ta bort bookningen om den finns
+                _context.Remove(booking);                           // Ta bort bookningen om den finns
             }
 
             await _context.SaveChangesAsync();
