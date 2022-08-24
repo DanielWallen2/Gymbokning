@@ -13,15 +13,15 @@ namespace Gymbokning.Data
         }
 
         public DbSet<GymClass> GymClasses { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationUserGymClass> ApplicationUserGymClasses { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ApplicationUserGymClass>().HasKey(c => new
+            modelBuilder.Entity<ApplicationUserGymClass>().HasKey(c => new      // För att göra en komposit-nyckel (PK) av GymClassId och ApplicationUserId
             {
                 c.GymClassId,
                 c.ApplicationUserId

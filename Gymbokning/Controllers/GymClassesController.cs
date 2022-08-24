@@ -25,7 +25,6 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var gymClasses = await _context.GymClasses.ToListAsync();
