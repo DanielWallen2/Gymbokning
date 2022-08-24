@@ -25,9 +25,9 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-
             var gymClasses = await _context.GymClasses.ToListAsync();
             var gymClassesList = new List<GymClassIndexViewModel>();
 
@@ -40,16 +40,16 @@ namespace Gymbokning.Controllers
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
                     Description = gymClass.Description,
-                    IsBooked = await IsBooked(gymClass.Id)
+                    IsBooked = await IsBooked(gymClass.Id)      // OBS: Förutsätter en inloggad User
                 };
                 gymClassesList.Add(gymPassesViewModel);
             }
 
             return View(gymClassesList);
-
         }
 
         // GET: GymClasses/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GymClasses == null) return NotFound();
@@ -93,6 +93,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -103,6 +104,7 @@ namespace Gymbokning.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (ModelState.IsValid)
@@ -115,6 +117,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -135,6 +138,7 @@ namespace Gymbokning.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -160,6 +164,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -180,6 +185,7 @@ namespace Gymbokning.Controllers
         // POST: GymClasses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.GymClasses == null)
