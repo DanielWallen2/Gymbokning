@@ -1,4 +1,5 @@
 using Gymbokning.Data;
+using Gymbokning.Extention;
 using Gymbokning.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// await app.SeedDataAsync(); 
+await app.SeedDataAsync(); 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

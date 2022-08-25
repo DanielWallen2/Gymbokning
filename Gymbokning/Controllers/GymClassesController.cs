@@ -32,6 +32,8 @@ namespace Gymbokning.Controllers
 
             foreach (var gymClass in gymClasses)
             {
+                if (gymClass.StartTime < DateTime.Now) continue;
+
                 var gymPassesViewModel = new GymClassIndexViewModel
                 {
                     Id = gymClass.Id,
@@ -39,7 +41,7 @@ namespace Gymbokning.Controllers
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
                     Description = gymClass.Description,
-                    IsBooked = await IsBooked(gymClass.Id)      // OBS: Förutsätter en inloggad User
+                    IsBooked = await IsBooked(gymClass.Id) 
                 };
                 gymClassesList.Add(gymPassesViewModel);
             }

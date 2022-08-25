@@ -6,7 +6,7 @@ namespace Gymbokning.Extention
     {
         public static async Task<IApplicationBuilder> SeedDataAsync(this IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            using(var scope = app.ApplicationServices.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
