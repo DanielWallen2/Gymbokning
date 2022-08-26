@@ -36,7 +36,7 @@ namespace Gymbokning.Controllers
 
                 var gymPassesViewModel = new GymClassIndexViewModel
                 {
-                    Id = gymClass.Id,
+                    Id = gymClass.Id,                       // testa automapper
                     Name = gymClass.Name,
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
@@ -50,7 +50,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Details/5
-        [Authorize]
+        [Authorize(Roles = "Medlem")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GymClasses == null) return NotFound();
@@ -94,7 +94,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -105,7 +105,7 @@ namespace Gymbokning.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -139,7 +139,7 @@ namespace Gymbokning.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -165,7 +165,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -186,7 +186,7 @@ namespace Gymbokning.Controllers
         // POST: GymClasses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.GymClasses == null)
@@ -208,7 +208,7 @@ namespace Gymbokning.Controllers
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Medlem")]
         public async Task<IActionResult> BookingToggle(int? id)
         {
             if (id == null) return NotFound();
