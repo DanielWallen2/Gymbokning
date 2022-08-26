@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Gymbokning.ViewModels.GymClassIndexViewModel>
 
-<h1>Bokade Gym Pass</h1>
+<h1>Historik</h1>
 
 <p>
 
@@ -28,6 +28,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    @if (item.IsBooked) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -45,14 +46,10 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="BookingToggle" asp-route-id="@item.Id">Avboka</a> <span> | </span>
                 <a asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
-            @if (User.IsInRole("Admin")) {
-                <span> | </span> <a asp-action="Edit" asp-route-id="@item.Id">Ändra</a> 
-                <span> | </span> <a asp-action="Delete" asp-route-id="@item.Id">Ta bort</a>
-            }
             </td>
         </tr>
+    }
 }
     </tbody>
 </table>
