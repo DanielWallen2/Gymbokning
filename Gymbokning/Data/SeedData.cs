@@ -34,7 +34,9 @@ namespace Gymbokning.Data
             await CreateRolesAsync(roleNames);
 
             var adminEmail = "admin@Gymbokning.se";
-            var admin = await CreateUserAsync(adminEmail, adminPSW);
+            var adminFirstName = "Lazy";
+            var adminLastName = "Lars";
+            var admin = await CreateUserAsync(adminEmail, adminPSW, adminFirstName, adminLastName);
 
             await AddAdminToAllRolesAsync(admin, roleNames);
 
@@ -76,7 +78,7 @@ namespace Gymbokning.Data
 
         }
 
-        private static async Task<ApplicationUser> CreateUserAsync(string email, string psw)
+        private static async Task<ApplicationUser> CreateUserAsync(string email, string psw, string? FirstName, string? LastName)
         {
             var found = await userManager.FindByEmailAsync(email);
             if(found != null) return null!;
@@ -84,7 +86,9 @@ namespace Gymbokning.Data
             var user = new ApplicationUser
             {
                 UserName = email,
-                Email = email
+                Email = email,
+                FirstName = FirstName,
+                LastName = LastName
             };
 
             var result = await userManager.CreateAsync(user, psw);

@@ -52,10 +52,18 @@ namespace Gymbokning.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
+            [Display(Name = "Förnamn")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Efternamn")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -70,6 +78,8 @@ namespace Gymbokning.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
                 PhoneNumber = phoneNumber
             };
         }

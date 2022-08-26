@@ -40,6 +40,9 @@
     <thead>
         <tr>
             <th>
+                Namn
+            </th>
+            <th>
                 Email
             </th>
         </tr>
@@ -48,13 +51,15 @@
 @foreach (var classMember in Model.GymClassMembers) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => classMember.FullName)
+            </td>            
+            <td>
                 @Html.DisplayFor(modelItem => classMember.Email)
             </td>
         </tr>
 }
     </tbody>
     </table>
-
 
 </div>
 
