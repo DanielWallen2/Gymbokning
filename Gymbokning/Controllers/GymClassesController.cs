@@ -49,6 +49,31 @@ namespace Gymbokning.Controllers
             return View(gymClassesList);
         }
 
+        [Authorize(Roles = "Member")]
+        public async Task<IActionResult> IndexBooked()
+        {
+            var gymClasses = await _context.GymClasses.ToListAsync();
+            var gymClassesList = new List<GymClassIndexViewModel>();
+
+            foreach (var gymClass in gymClasses)
+            {
+                if (gymClass.StartTime < DateTime.Now && await IsBooked(gymClass.Id)) continue;
+
+                var gymPassesViewModel = new GymClassIndexViewModel
+                {
+                    Id = gymClass.Id,                       // testa automapper
+                    Name = gymClass.Name,
+                    StartTime = gymClass.StartTime,
+                    Duration = gymClass.Duration,
+                    Description = gymClass.Description,
+                    IsBooked = await IsBooked(gymClass.Id)
+                };
+                gymClassesList.Add(gymPassesViewModel);
+            }
+
+            return View(gymClassesList);
+        }
+
         // GET: GymClasses/Details/5
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> Details(int? id)
