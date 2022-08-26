@@ -50,7 +50,7 @@ namespace Gymbokning.Controllers
         }
 
         // GET: GymClasses/Details/5
-        [Authorize(Roles = "Medlem")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GymClasses == null) return NotFound();
@@ -208,7 +208,7 @@ namespace Gymbokning.Controllers
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        [Authorize(Roles = "Medlem")]
+        [Authorize(Roles = "Member")]
         public async Task<IActionResult> BookingToggle(int? id)
         {
             if (id == null) return NotFound();

@@ -121,6 +121,12 @@ namespace Gymbokning.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+
+                    // Lägg till den nya user till Member-rollen
+                    result = await _userManager.AddToRoleAsync(user, "Member");
+                    if (!result.Succeeded) throw new Exception($"\n{result.Errors}");
+
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
