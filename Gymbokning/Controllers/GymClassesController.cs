@@ -151,16 +151,11 @@ namespace Gymbokning.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.GymClasses == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.GymClasses == null) return NotFound();
 
             var gymClass = await _context.GymClasses.FindAsync(id);
-            if (gymClass == null)
-            {
-                return NotFound();
-            }
+            if (gymClass == null) return NotFound();
+
             return View(gymClass);
         }
 
@@ -173,8 +168,6 @@ namespace Gymbokning.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id) return NotFound();
-
-            //if(IsPassed(gymClass.StartTime)) return BadRequest();
 
             if (ModelState.IsValid)
             {
@@ -271,11 +264,6 @@ namespace Gymbokning.Controllers
             return (booking != null);
         }
 
-        public bool IsPassed(DateTime startTime)
-        {
-            return (startTime < DateTime.Now);
-        }
-
         public async Task<JsonResult> ValidateStartTime(DateTime startTime)
         {
             if(startTime < DateTime.Now)
@@ -285,6 +273,10 @@ namespace Gymbokning.Controllers
             return Json(true);
         }
 
+        //public bool IsPassed(DateTime startTime)
+        //{
+        //    return (startTime < DateTime.Now);
+        //}
 
     }
 }
