@@ -172,10 +172,9 @@ namespace Gymbokning.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
-            if (id != gymClass.Id)
-            {
-                return NotFound();
-            }
+            if (id != gymClass.Id) return NotFound();
+
+            //if(IsPassed(gymClass.StartTime)) return BadRequest();
 
             if (ModelState.IsValid)
             {
@@ -271,6 +270,21 @@ namespace Gymbokning.Controllers
 
             return (booking != null);
         }
+
+        public bool IsPassed(DateTime startTime)
+        {
+            return (startTime < DateTime.Now);
+        }
+
+        public async Task<JsonResult> ValidateStartTime(DateTime startTime)
+        {
+            if(startTime < DateTime.Now)
+            {
+                return Json("This time has allready passed");
+            }
+            return Json(true);
+        }
+
 
     }
 }

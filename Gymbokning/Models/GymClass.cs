@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gymbokning.Validations;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gymbokning.Models
 {
@@ -10,6 +12,8 @@ namespace Gymbokning.Models
         public string Name { get; set; }
 
         [Display(Name = "Starttid")]
+        [Remote("ValidateStartTime", "GymClasses")]
+        [ValidateStarttimePassed(ErrorMessage = "This time has allready passed")]
         public DateTime StartTime { get; set; }
 
         [Display(Name = "Längd")]
