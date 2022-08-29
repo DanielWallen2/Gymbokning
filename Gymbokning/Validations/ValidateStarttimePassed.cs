@@ -1,4 +1,5 @@
-﻿using Gymbokning.Data.Migrations;
+﻿//using Gymbokning.Data.Migrations;
+using Gymbokning.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gymbokning.Validations
@@ -7,7 +8,7 @@ namespace Gymbokning.Validations
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var errMsg = "This time has allready passed";       // ?
+            //var errMsg = "This time has allready passed";       // ?
 
             if(value is DateTime input)
             {

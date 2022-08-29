@@ -10,6 +10,7 @@ using Gymbokning.Models;
 using Microsoft.AspNetCore.Identity;
 using Gymbokning.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace Gymbokning.Controllers
 {
@@ -17,11 +18,13 @@ namespace Gymbokning.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            this._mapper = mapper;
         }
 
         // GET: GymClasses
@@ -106,18 +109,21 @@ namespace Gymbokning.Controllers
         {
             if (id == null || _context.GymClasses == null) return NotFound();
 
-            var gymPassDetailViewModel = await _context.GymClasses
-                .Include(g => g.GymClassMembers)
-                .ThenInclude(g => g.ApplicationUser)
-                .Select(d => new GymClassDetailViewModel
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    StartTime = d.StartTime,
-                    Duration = d.Duration,
-                    Description = d.Description,
-                    GymClassMembers = d.GymClassMembers.Select(a => a.ApplicationUser).ToList()
-                })
+            //var gymPassDetailViewModel = await _context.GymClasses
+            //    .Include(g => g.GymClassMembers)
+            //    .ThenInclude(g => g.ApplicationUser)
+            //    .Select(d => new GymClassDetailViewModel
+            //    {
+            //        Id = d.Id,
+            //        Name = d.Name,
+            //        StartTime = d.StartTime,
+            //        Duration = d.Duration,
+            //        Description = d.Description,
+            //        GymClassMembers = d.GymClassMembers.Select(a => a.ApplicationUser).ToList()
+            //    })
+            //    .FirstOrDefaultAsync(g => g.Id == id);
+
+            var gymPassDetailViewModel = await _mapper.ProjectTo<GymClassDetailViewModel>(_context.GymClasses)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             return View(gymPassDetailViewModel);

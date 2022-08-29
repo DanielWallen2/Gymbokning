@@ -1,3 +1,4 @@
+using Gymbokning.Automapper;
 using Gymbokning.Data;
 using Gymbokning.Extention;
 using Gymbokning.Models;
@@ -23,6 +24,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 builder.Services.AddControllersWithViews();
 
