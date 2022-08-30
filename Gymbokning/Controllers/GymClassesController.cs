@@ -45,7 +45,7 @@ namespace Gymbokning.Controllers
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
                     Description = gymClass.Description,
-                    IsBooked = await IsBooked(gymClass.Id) 
+                    IsBooked = IsBooked(gymClass.Id) 
                 };
                 gymClassesList.Add(gymPassesViewModel);
             }
@@ -56,12 +56,18 @@ namespace Gymbokning.Controllers
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> IndexBooked()
         {
-            var gymClasses = await _context.GymClasses.Where(g => g.StartTime > DateTime.Now).ToListAsync();
+
+            var userId = _userManager.GetUserId(User);
+
+            var gymClasses = await _context.GymClasses
+                .Include(g => g.GymClassMembers)
+                .Where(g => g.StartTime > DateTime.Now)
+                .ToListAsync();
             var gymClassesList = new List<GymClassIndexViewModel>();
 
             foreach (var gymClass in gymClasses)
             {
-                if (!await IsBooked(gymClass.Id)) continue;
+                //if (!await IsBooked(gymClass.Id)) continue;
 
                 var gymPassesViewModel = new GymClassIndexViewModel
                 {
@@ -70,10 +76,13 @@ namespace Gymbokning.Controllers
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
                     Description = gymClass.Description,
-                    IsBooked = await IsBooked(gymClass.Id)
+                    IsBooked = true /*await IsBooked(gymClass.Id)*/  // alltid true
                 };
                 gymClassesList.Add(gymPassesViewModel);
             }
+
+            //var gymClassesList = await _mapper.ProjectTo<GymClassIndexViewModel>(                 // Hur göra med IsBooked ?
+            //    _context.GymClasses.Where(g => g.StartTime > DateTime.Now)).ToListAsync();
 
             return View(gymClassesList);
         }
@@ -86,7 +95,7 @@ namespace Gymbokning.Controllers
 
             foreach (var gymClass in gymClasses)
             {
-                if (!await IsBooked(gymClass.Id)) continue;
+                if (!IsBooked(gymClass.Id)) continue;
 
                 var gymPassesViewModel = new GymClassIndexViewModel
                 {
@@ -95,7 +104,7 @@ namespace Gymbokning.Controllers
                     StartTime = gymClass.StartTime,
                     Duration = gymClass.Duration,
                     Description = gymClass.Description,
-                    IsBooked = await IsBooked(gymClass.Id)
+                    IsBooked = true /*await IsBooked(gymClass.Id)*/  // alltid true
                 };
                 gymClassesList.Add(gymPassesViewModel);
             }
@@ -262,13 +271,21 @@ namespace Gymbokning.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<bool> IsBooked(int id)
+        public bool IsBooked(int id)
         {
             var userId = _userManager.GetUserId(User);
-            var booking = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
+            var booking = _context.ApplicationUserGymClasses.Find(id, userId);
 
             return (booking != null);
         }
+
+        //public async Task<bool> IsBooked(int id)
+        //{
+        //    var userId = _userManager.GetUserId(User);
+        //    var booking = await _context.ApplicationUserGymClasses.FindAsync(id, userId);
+
+        //    return (booking != null);
+        //}
 
         public async Task<JsonResult> ValidateStartTime(DateTime startTime)
         {

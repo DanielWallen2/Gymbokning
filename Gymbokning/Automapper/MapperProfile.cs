@@ -8,6 +8,7 @@ namespace Gymbokning.Automapper
     {
         public MapperProfile()
         {
+            CreateMap<GymClass, GymClassIndexViewModel>();
             CreateMap<GymClass, GymClassDetailViewModel>()
                 .ForMember(
                     dest => dest.GymClassMembers,
