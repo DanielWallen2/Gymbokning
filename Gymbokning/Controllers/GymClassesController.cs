@@ -61,8 +61,9 @@ namespace Gymbokning.Controllers
 
             var gymClasses = await _context.GymClasses
                 .Include(g => g.GymClassMembers)
-                .Where(g => g.StartTime > DateTime.Now)
+                .Where(g => g.StartTime > DateTime.Now && g.GymClassMembers.Any(a => a.ApplicationUserId == userId))
                 .ToListAsync();
+
             var gymClassesList = new List<GymClassIndexViewModel>();
 
             foreach (var gymClass in gymClasses)
@@ -90,7 +91,13 @@ namespace Gymbokning.Controllers
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> IndexPassed()
         {
-            var gymClasses = await _context.GymClasses.Where(g => g.StartTime < DateTime.Now).ToListAsync();
+            var userId = _userManager.GetUserId(User);
+
+            var gymClasses = await _context.GymClasses
+                .Include(g => g.GymClassMembers)
+                .Where(g => g.StartTime < DateTime.Now && g.GymClassMembers.Any(a => a.ApplicationUserId == userId))
+                .ToListAsync();
+
             var gymClassesList = new List<GymClassIndexViewModel>();
 
             foreach (var gymClass in gymClasses)
